@@ -2,8 +2,6 @@
 
 # creator=MD5MapCreator.sh
 
-
-
 cleanup_previous_output() {
 	folder=$1
 	file=$2
@@ -19,6 +17,7 @@ create_ouput_file() {
 }
 
 for folder in $(cat $1); do
+	start=`date +%s`
 	IFS="/" read -a container <<< $folder
 	# echo "Array: ${container[@]}"
 	max=${#container[@]}
@@ -27,6 +26,9 @@ for folder in $(cat $1); do
 	basename="${container[$index]}"
 	output="$basename.md5"
 
+	# Create Log file
+	touch ./logs/$basename.log
+
 	# Cleans up the previous folder	
 	cleanup_previous_output $folder $output
 
@@ -34,12 +36,22 @@ for folder in $(cat $1); do
 	create_ouput_file $folder $output
 	echo "FILE NAME,MD5HASH" >>$folder/$output
 	
+	COUNTER=0
 	for file in $(find $folder -type f); do
 		filename=$(basename $file)
 		hash=$(md5sum $file | awk '{print $1}')
 		entry="${basename}\\${filename},${hash}"
 		echo $entry >> $folder/$output
+		echo "hashed $filename" >> ./logs/$basename.log
+		COUNTER=$[$COUNTER +1]
 	done
 
+	end=`date +%s`
+
 	sed -i "s/.\/// " $folder/$output
+
+	echo "TOTAL TIME: `expr $end - $start` seconds" >> ./logs/$basename.log
+	echo "PATH: $folder" >> ./logs/$basename.log
+	echo "OUTPUT: $folder/$output" >> ./logs/$basename.log
+	echo "TOTAL FILES: $COUNTER" >> ./logs/$basename.log
 done
