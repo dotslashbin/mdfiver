@@ -35,13 +35,11 @@ for folder in $(cat $1); do
 	echo "FILE NAME,MD5HASH" >>$folder/$output
 	
 	for file in $(find $folder -type f); do
+		filename=$(basename $file)
 		hash=$(md5sum $file | awk '{print $1}')
 		entry="${basename}\\${filename},${hash}"
 		echo $entry >> $folder/$output
 	done
 
-	# cp -vf ./$creator $folder
-	# cd $folder
-	# chmod +x $creator
-	# ./$creator
+	sed -i "s/.\/// " $folder/$output
 done
