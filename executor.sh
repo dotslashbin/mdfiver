@@ -9,12 +9,12 @@ cleanup_previous_output() {
 	rm -f $folder/$file
 }
 
-create_ouput_file() {
-	folder=$1
-	file=$2
-
-	touch $folder/$file
+# Removes the creator script from the curent folder
+cleanup_operation_folder() {
+	rm -vf MD5MapCreator.sh
 }
+
+executiondir=$PWD
 
 for folder in $(cat $1); do
 	start=`date +%s`
@@ -29,29 +29,27 @@ for folder in $(cat $1); do
 	# Create Log file
 	touch ./logs/$basename.log
 
-	# Cleans up the previous folder	
+	# Deleting previous output
 	cleanup_previous_output $folder $output
 
-	#Creates the output file
-	create_ouput_file $folder $output
-	echo "FILE NAME,MD5HASH" >>$folder/$output
-	
-	COUNTER=0
-	for file in $(find $folder -type f); do
-		filename=$(basename $file)
-		hash=$(md5sum $file | awk '{print $1}')
-		entry="${basename}\\${filename},${hash}"
-		echo $entry >> $folder/$output
-		echo "hashed $filename" >> ./logs/$basename.log
-		COUNTER=$[$COUNTER +1]
-	done
+	# Copying the execution script to folder of operation
+	echo "Copying creator script ..."
+	cp -vf ./MD5MapCreator.sh $folder
+
+	# Going to folder and running the script
+	cd $folder
+	./MD5MapCreator.sh
+
+	# Cleans the operation folder by removing the script
+	cleanup_operation_folder
+
+	cd $executiondir
 
 	end=`date +%s`
 
-	sed -i "s/.\/// " $folder/$output
 
 	echo "TOTAL TIME: `expr $end - $start` seconds" >> ./logs/$basename.log
 	echo "PATH: $folder" >> ./logs/$basename.log
 	echo "OUTPUT: $folder/$output" >> ./logs/$basename.log
-	echo "TOTAL FILES: $COUNTER" >> ./logs/$basename.log
+
 done
