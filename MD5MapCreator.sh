@@ -13,8 +13,7 @@ echo "FILE NAME,MD5HASH" >>$output
 # Generates the MD5 hash and writes to the output file
 for file in $(find . -type f); do
 	filename=$(basename $file)
-	echo $filename
-	if [ $filename != $output ] && [ $filename != "script.sh" ]; then
+	if [ $filename != $output ] && [ $filename != "MD5MapCreator.sh" ]; then
 		hash=$(md5sum $file | awk '{print $1}')
 		entry="${currentdir}\\${filename},${hash}"
 		echo $entry >>$output
