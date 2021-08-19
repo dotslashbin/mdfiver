@@ -30,8 +30,14 @@ if [ -z "$1" ] && [ -z "$2" ] && [ -z "$3" ] && [ -z "$4" ]; then
 	echo "Sample: ./md5generator.sh input.txt 764 wasdamin users"
 fi
 
+script_start=`date +%s`
+# Create Log for the script
+SCRIPT_LOG_FILE=./logs/script.log
+touch $SCRIPT_LOG_FILE
+echo "Script started ..." >> $SCRIPT_LOG_FILE
+
 for folder in $(cat $1); do
-	start=`date +%s`
+	folder_eval_start=`date +%s`
 	IFS="/" read -a container <<< $folder
 	# echo "Array: ${container[@]}"
 	max=${#container[@]}
@@ -42,6 +48,7 @@ for folder in $(cat $1); do
 
 	# Create Log file
 	touch ./logs/$basename.log
+	LOG_FILE=./logs/$basename.log
 
 	# Cleans up the previous folder	
 	cleanup_previous_output $folder $output
@@ -56,16 +63,20 @@ for folder in $(cat $1); do
 		hash=$(md5sum $file | awk '{print $1}')
 		entry="${basename}\\${filename},${hash}"
 		echo $entry >> $folder/$output
-		echo "hashed $filename" >> ./logs/$basename.log
+		echo "hashed $filename" >> $LOG_FILE
 		COUNTER=$[$COUNTER +1]
 	done
 
-	end=`date +%s`
+	folder_eval_end=`date +%s`
 
 	sed -i "s/.\/// " $folder/$output
 
-	echo "TOTAL TIME: `expr $end - $start` seconds" >> ./logs/$basename.log
-	echo "PATH: $folder" >> ./logs/$basename.log
-	echo "OUTPUT: $folder/$output" >> ./logs/$basename.log
-	echo "TOTAL FILES: $COUNTER" >> ./logs/$basename.log
+	echo "TOTAL TIME: `expr $folder_eval_end - $folder_eval_start` seconds" >> $LOG_FILE
+	echo "PATH: $folder" >> $LOG_FILE
+	echo "OUTPUT: $folder/$output" >> $LOG_FILE
+	echo "TOTAL FILES: $COUNTER" >> $LOG_FILE
 done
+
+script_end=`date +%s`
+
+echo "completed in `expr $script_end - $script_start` seconds" >> $SCRIPT_LOG_FILE
