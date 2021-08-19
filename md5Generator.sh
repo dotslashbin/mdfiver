@@ -35,6 +35,7 @@ script_start=`date +%s`
 SCRIPT_LOG_FILE=./logs/script.log
 touch $SCRIPT_LOG_FILE
 echo "Script started ..." >> $SCRIPT_LOG_FILE
+echo "processing file: $1" >> $SCRIPT_LOG_FILE
 
 for folder in $(cat $1); do
 	folder_eval_start=`date +%s`
