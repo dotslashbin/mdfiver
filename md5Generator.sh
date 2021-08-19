@@ -12,9 +12,18 @@ cleanup_previous_output() {
 create_ouput_file() {
 	folder=$1
 	file=$2
+	permission=$3
+	owner=$4
+	group=$5
 
 	touch $folder/$file
+	chmod -v $permission $folder/$file
+	chown -v $owner:$group $folder/$file
 }
+
+chmodvalue=$2
+userval=$3
+groupval=$4
 
 for folder in $(cat $1); do
 	start=`date +%s`
@@ -33,7 +42,7 @@ for folder in $(cat $1); do
 	cleanup_previous_output $folder $output
 
 	#Creates the output file
-	create_ouput_file $folder $output
+	create_ouput_file $folder $output $chmodvalue $userval $groupval
 	echo "FILE NAME,MD5HASH" >>$folder/$output
 	
 	COUNTER=0
