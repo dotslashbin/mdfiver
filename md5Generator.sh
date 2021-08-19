@@ -25,6 +25,11 @@ chmodvalue=$2
 userval=$3
 groupval=$4
 
+if [ -z "$1" ] && [ -z "$2" ] && [ -z "$3" ] && [ -z "$4" ]; then 
+	echo "You must supply the required and valid inputs."
+	echo "Sample: ./md5generator.sh input.txt 764 wasdamin users"
+fi
+
 for folder in $(cat $1); do
 	start=`date +%s`
 	IFS="/" read -a container <<< $folder
