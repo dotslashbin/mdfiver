@@ -46,7 +46,7 @@ for folder in $(cat $1); do
 	index="$(($max-1))"
 	# echo "${container[4]}"
 	basename="${container[$index]}"
-	output="$basename.md5"
+	output="${basename}_FC-SHA256.txt"
 
 	# Create Log file
 	touch ./logs/$basename.log
@@ -62,7 +62,7 @@ for folder in $(cat $1); do
 	COUNTER=0
 	for file in $(find $folder -type f); do
 		filename=$(basename $file)
-		hash=$(md5sum $file | awk '{print $1}')
+		hash=$(sha256sum $file | awk '{print $1}')
 		entry="${basename}\\${filename},${hash}"
 		echo $entry >> $folder/$output
 		echo "hashed $filename" >> $LOG_FILE
