@@ -49,8 +49,8 @@ for folder in $(cat $1); do
 	output="${basename}_FC-SHA256.txt"
 
 	# Create Log file
-	touch ./logs/$basename.log
-	LOG_FILE=./logs/$basename.log
+	touch ./logs/folders/$basename.log
+	LOG_FILE=./logs/folders/$basename.log
 
 	# Cleans up the previous folder	
 	cleanup_previous_output $folder $output
