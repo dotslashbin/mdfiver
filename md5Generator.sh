@@ -33,7 +33,7 @@ fi
 
 script_start=`date +%s`
 # Create Log for the script
-SCRIPT_LOG_FILE=./logs/script.log
+SCRIPT_LOG_FILE=./logs/"${1}".log
 touch $SCRIPT_LOG_FILE
 echo "Script started ..." >> $SCRIPT_LOG_FILE
 echo "processing file: $1" >> $SCRIPT_LOG_FILE
