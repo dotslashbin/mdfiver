@@ -57,10 +57,10 @@ for folder in $(cat $1); do
 
 	#Creates the output file
 	create_ouput_file $folder $output $chmodvalue $userval $groupval
-	echo "FILE NAME,MD5HASH" >>$folder/$output
+	echo "FILE NAME,SHA256HASH" >>$folder/$output
 	
 	COUNTER=0
-	for file in $(find $folder -type f); do
+	for file in $(find $folder -type f | grep -v -e 'FC-SHA256.txt' ); do
 		filename=$(basename $file)
 		hash=$(sha256sum $file | awk '{print $1}')
 		entry="${basename}\\${filename},${hash}"
