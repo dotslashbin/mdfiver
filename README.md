@@ -15,6 +15,12 @@ version_1.5 | Log genearation
 version_1.6 | Modified script to allow generating of logs concurrently
 versoin_1.6.1 | Documentation update
 
+### Scripts
+|File|Description|Input|
+|--|--|--|
+|hasher.sh  | Executes the process for gererating the output file | text file containing a list of directories to process|
+cleaner.sh| Deletes the generated hash files from location| text file containing a list of directories ( same as above)
+
 
 ## TODOs
 * Organize folder logs using the name of the inputted year
